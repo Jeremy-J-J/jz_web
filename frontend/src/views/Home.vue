@@ -113,7 +113,7 @@ const goDetail = (id) => {
 const loadStats = async () => {
   try {
     const res = await publicApi.getStats()
-    stats.value = res.data || { total: 0, today: 0 }
+    stats.value = res || { total: 0, today: 0 }
   } catch (e) {
     console.error(e)
   }
