@@ -1,0 +1,14 @@
+[Unit]
+Description=JZ Web Backend
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/workspace/pro/jz_web
+ExecStart=/workspace/pro/jz_web/backend/app
+Restart=always
+MemoryMax=256M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target
