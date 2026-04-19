@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <header class="header">
-      <h1>电子资源展示平台</h1>
+      <h1>极智视界数据集分享</h1>
     </header>
 
     <div class="nav-bar">
