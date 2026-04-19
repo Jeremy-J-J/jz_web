@@ -54,6 +54,8 @@ func main() {
 		api.GET("/resources", handlers.GetResources)
 		api.GET("/resources/:id", handlers.GetResource)
 		api.GET("/search", handlers.SearchResources)
+		api.GET("/stats", handlers.GetStats)
+		api.POST("/visit", handlers.RecordVisit)
 
 		admin := api.Group("/admin")
 		admin.Use(middleware.AuthRequired())

@@ -11,6 +11,7 @@
       <div class="tabs">
         <button :class="['tab', { active: activeTab === 'resources' }]" @click="activeTab = 'resources'">资源管理</button>
         <button :class="['tab', { active: activeTab === 'categories' }]" @click="activeTab = 'categories'">类目管理</button>
+        <button :class="['tab', { active: activeTab === 'stats' }]" @click="activeTab = 'stats'">访问统计</button>
       </div>
 
       <!-- Resource Management -->
@@ -62,6 +63,21 @@
       <div v-if="activeTab === 'categories'">
         <CategoryManager />
       </div>
+
+      <!-- Stats Panel -->
+      <div v-if="activeTab === 'stats'" class="stats-panel">
+        <h2>访问统计</h2>
+        <div class="stats-grid">
+          <div class="stats-card">
+            <div class="stats-label">访问总数</div>
+            <div class="stats-value">{{ stats.total }}</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-label">今日访问</div>
+            <div class="stats-value">{{ stats.today }}</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -69,7 +85,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { authApi } from '../api'
+import { authApi, publicApi } from '../api'
 import CategoryManager from './CategoryManager.vue'
 
 const router = useRouter()
@@ -80,6 +96,7 @@ const loading = ref(true)
 const activeTab = ref('resources')
 const filterCategoryId = ref(null)
 const admin = JSON.parse(localStorage.getItem('admin') || '{}')
+const stats = ref({ total: 0, today: 0 })
 
 const loadResources = async () => {
   try {
@@ -132,6 +149,15 @@ const switchToResources = (categoryId) => {
   activeTab.value = 'resources'
 }
 
+const loadStats = async () => {
+  try {
+    const res = await publicApi.getStats()
+    stats.value = res.data || { total: 0, today: 0 }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 watch(() => route.query, (query) => {
   if (query.tab === 'resources') {
     activeTab.value = 'resources'
@@ -143,6 +169,12 @@ watch(() => route.query, (query) => {
     loadResources()
   }
 }, { immediate: true })
+
+watch(() => activeTab.value, (tab) => {
+  if (tab === 'stats') {
+    loadStats()
+  }
+})
 
 onMounted(() => {
   if (route.query.tab === 'resources') {
@@ -187,4 +219,10 @@ onMounted(() => {
 .btn-toggle { background: #faad14; color: #fff; }
 .btn-edit { background: #1890ff; color: #fff; }
 .btn-delete { background: #ff4d4f; color: #fff; }
+.stats-panel { background: #fff; border-radius: 8px; padding: 24px; }
+.stats-panel h2 { font-size: 18px; color: #333; margin-bottom: 20px; }
+.stats-grid { display: flex; gap: 24px; }
+.stats-card { flex: 1; background: #f8f8f8; border-radius: 8px; padding: 24px; text-align: center; }
+.stats-label { font-size: 14px; color: #666; margin-bottom: 8px; }
+.stats-value { font-size: 32px; color: #1890ff; font-weight: bold; }
 </style>

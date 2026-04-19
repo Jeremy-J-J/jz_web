@@ -30,6 +30,13 @@
       </div>
     </div>
 
+    <div class="stats-bar">
+      <div class="stats-container">
+        <span>访问总数：{{ stats.total }}</span>
+        <span>今日访问：{{ stats.today }}</span>
+      </div>
+    </div>
+
     <div class="container">
       <div v-if="loading" class="loading">加载中...</div>
       <div v-else-if="resources.length === 0" class="empty">
@@ -60,6 +67,7 @@ const categories = ref([])
 const loading = ref(true)
 const selectedCategory = ref(0)
 const searchKeyword = ref('')
+const stats = ref({ total: 0, today: 0 })
 
 const loadCategories = async () => {
   try {
@@ -102,9 +110,28 @@ const goDetail = (id) => {
   window.location.href = `/resource/${id}`
 }
 
+const loadStats = async () => {
+  try {
+    const res = await publicApi.getStats()
+    stats.value = res.data || { total: 0, today: 0 }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const recordVisit = async () => {
+  try {
+    await publicApi.recordVisit()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 onMounted(async () => {
   await loadCategories()
   loadResources()
+  loadStats()
+  recordVisit()
 })
 </script>
 
@@ -114,6 +141,8 @@ onMounted(async () => {
 .header h1 { font-size: 24px; color: #333; text-align: center; }
 .nav-bar { background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
 .nav-container { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.stats-bar { background: #f8f8f8; border-bottom: 1px solid #eee; }
+.stats-container { max-width: 1200px; margin: 0 auto; padding: 8px 20px; display: flex; gap: 24px; font-size: 14px; color: #666; }
 .category-nav { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
 .cat-btn { padding: 8px 16px; border: 1px solid #ddd; background: #fff; border-radius: 4px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
 .cat-btn:hover { border-color: #1890ff; color: #1890ff; }

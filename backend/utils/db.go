@@ -64,6 +64,13 @@ func createTables() error {
 		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);`
 
+	statsTable := `
+	CREATE TABLE IF NOT EXISTS stats (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		date DATE UNIQUE NOT NULL,
+		count INTEGER DEFAULT 0
+	);`
+
 	if _, err := DB.Exec(adminTable); err != nil {
 		return err
 	}
@@ -73,6 +80,10 @@ func createTables() error {
 	}
 
 	if _, err := DB.Exec(resourceTable); err != nil {
+		return err
+	}
+
+	if _, err := DB.Exec(statsTable); err != nil {
 		return err
 	}
 
