@@ -2,6 +2,7 @@
   <div class="home">
     <header class="header">
       <h1>AI数据集分享</h1>
+      <p class="subtitle">极智视界 | 专注高质量AI技术分享</p>
     </header>
 
     <div class="nav-bar">
@@ -139,6 +140,7 @@ onMounted(async () => {
 .home { min-height: 100vh; background: #f5f5f5; }
 .header { background: #fff; padding: 20px 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .header h1 { font-size: 24px; color: #333; text-align: center; }
+.header .subtitle { font-size: 14px; color: #888; text-align: center; margin-top: 8px; }
 .nav-bar { background: #fff; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
 .nav-container { max-width: 1200px; margin: 0 auto; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
 .stats-bar { background: #f8f8f8; border-bottom: 1px solid #eee; }
