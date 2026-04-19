@@ -36,7 +36,7 @@
         {{ searchKeyword ? '未找到匹配的资源' : '暂无资源' }}
       </div>
       <div v-else class="resource-grid">
-        <div v-for="resource in resources" :key="resource.id" class="resource-card" @click="window.location.href = `/resource/${resource.id}`">
+        <div v-for="resource in resources" :key="resource.id" class="resource-card" @click="goDetail(resource.id)">
           <div class="card-cover">
             <img v-if="resource.cover" :src="resource.cover" :alt="resource.title">
             <div v-else class="cover-placeholder">暂无封面</div>
@@ -98,6 +98,10 @@ const doSearch = () => {
   loadResources()
 }
 
+const goDetail = (id) => {
+  window.location.href = `/resource/${id}`
+}
+
 onMounted(async () => {
   await loadCategories()
   loadResources()
@@ -128,3 +132,4 @@ onMounted(async () => {
 .card-content { padding: 16px; }
 .card-content h3 { font-size: 16px; margin-bottom: 8px; color: #333; }
 .card-content p { font-size: 14px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
