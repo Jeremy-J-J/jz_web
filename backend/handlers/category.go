@@ -116,14 +116,14 @@ func GetResourcesByCategory(c *gin.Context) {
 			rows, queryErr = utils.DB.Query(
 				`SELECT id, category_id, title, cover, description, link, status, created_at, updated_at
 				FROM resource WHERE status = 1 AND category_id = ? AND (title LIKE ? OR description LIKE ?)
-				ORDER BY created_at DESC`,
+				ORDER BY updated_at DESC, created_at DESC, id DESC`,
 				categoryID, "%"+keyword+"%", "%"+keyword+"%",
 			)
 		} else {
 			rows, queryErr = utils.DB.Query(
 				`SELECT id, category_id, title, cover, description, link, status, created_at, updated_at
 				FROM resource WHERE status = 1 AND (title LIKE ? OR description LIKE ?)
-				ORDER BY created_at DESC`,
+				ORDER BY updated_at DESC, created_at DESC, id DESC`,
 				"%"+keyword+"%", "%"+keyword+"%",
 			)
 		}
@@ -134,7 +134,7 @@ func GetResourcesByCategory(c *gin.Context) {
 				`SELECT id, category_id, title, cover, description, link, status, created_at, updated_at
 				FROM resource
 				WHERE status = 1 AND category_id = ?
-				ORDER BY created_at DESC`,
+				ORDER BY updated_at DESC, created_at DESC, id DESC`,
 				categoryID,
 			)
 		} else {
@@ -142,7 +142,7 @@ func GetResourcesByCategory(c *gin.Context) {
 				`SELECT id, category_id, title, cover, description, link, status, created_at, updated_at
 				FROM resource
 				WHERE status = 1
-				ORDER BY created_at DESC`,
+				ORDER BY updated_at DESC, created_at DESC, id DESC`,
 			)
 		}
 	}
@@ -178,7 +178,7 @@ func SearchResources(c *gin.Context) {
 			`SELECT id, category_id, title, cover, description, link, status, created_at, updated_at
 			FROM resource
 			WHERE status = 1 AND category_id = ? AND (title LIKE ? OR description LIKE ?)
-			ORDER BY created_at DESC`,
+			ORDER BY updated_at DESC, created_at DESC, id DESC`,
 			categoryID, "%"+keyword+"%", "%"+keyword+"%",
 		)
 	} else if keyword != "" {
@@ -186,7 +186,7 @@ func SearchResources(c *gin.Context) {
 			`SELECT id, category_id, title, cover, description, link, status, created_at, updated_at
 			FROM resource
 			WHERE status = 1 AND (title LIKE ? OR description LIKE ?)
-			ORDER BY created_at DESC`,
+			ORDER BY updated_at DESC, created_at DESC, id DESC`,
 			"%"+keyword+"%", "%"+keyword+"%",
 		)
 	} else if categoryID > 0 {
@@ -194,7 +194,7 @@ func SearchResources(c *gin.Context) {
 			`SELECT id, category_id, title, cover, description, link, status, created_at, updated_at
 			FROM resource
 			WHERE status = 1 AND category_id = ?
-			ORDER BY created_at DESC`,
+			ORDER BY updated_at DESC, created_at DESC, id DESC`,
 			categoryID,
 		)
 	} else {
@@ -202,7 +202,7 @@ func SearchResources(c *gin.Context) {
 			`SELECT id, category_id, title, cover, description, link, status, created_at, updated_at
 			FROM resource
 			WHERE status = 1
-			ORDER BY created_at DESC`,
+			ORDER BY updated_at DESC, created_at DESC, id DESC`,
 		)
 	}
 

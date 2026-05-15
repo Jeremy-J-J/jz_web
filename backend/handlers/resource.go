@@ -15,7 +15,7 @@ import (
 // Public: Get all published resources
 func GetResources(c *gin.Context) {
 	rows, err := utils.DB.Query(
-		"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource WHERE status = 1 ORDER BY category_id ASC, created_at DESC",
+		"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource WHERE status = 1 ORDER BY updated_at DESC, created_at DESC, id DESC",
 	)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch resources"})
@@ -71,12 +71,12 @@ func GetAllResources(c *gin.Context) {
 
 	if categoryID != "" {
 		rows, err = utils.DB.Query(
-			"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource WHERE category_id = ? ORDER BY id ASC",
+			"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource WHERE category_id = ? ORDER BY updated_at DESC, created_at DESC, id DESC",
 			categoryID,
 		)
 	} else {
 		rows, err = utils.DB.Query(
-			"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource ORDER BY category_id ASC, created_at DESC",
+			"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource ORDER BY updated_at DESC, created_at DESC, id DESC",
 		)
 	}
 
