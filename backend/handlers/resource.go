@@ -15,7 +15,7 @@ import (
 // Public: Get all published resources
 func GetResources(c *gin.Context) {
 	rows, err := utils.DB.Query(
-		"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource WHERE status = 1 ORDER BY updated_at DESC, created_at DESC, id DESC",
+		"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource WHERE status = 1 ORDER BY COALESCE(updated_at, created_at) DESC, created_at DESC, id DESC",
 	)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch resources"})
@@ -71,12 +71,12 @@ func GetAllResources(c *gin.Context) {
 
 	if categoryID != "" {
 		rows, err = utils.DB.Query(
-			"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource WHERE category_id = ? ORDER BY updated_at DESC, created_at DESC, id DESC",
+			"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource WHERE category_id = ? ORDER BY COALESCE(updated_at, created_at) DESC, created_at DESC, id DESC",
 			categoryID,
 		)
 	} else {
 		rows, err = utils.DB.Query(
-			"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource ORDER BY updated_at DESC, created_at DESC, id DESC",
+			"SELECT id, category_id, title, cover, description, link, status, created_at, updated_at FROM resource ORDER BY COALESCE(updated_at, created_at) DESC, created_at DESC, id DESC",
 		)
 	}
 
@@ -116,9 +116,10 @@ func CreateResource(c *gin.Context) {
 		categoryID = 1 // Default to first category
 	}
 
+	now := time.Now()
 	result, err := utils.DB.Exec(
-		"INSERT INTO resource (id, category_id, title, cover, description, link, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
-		newID, categoryID, req.Title, req.Cover, req.Description, req.Link, req.Status,
+		"INSERT INTO resource (id, category_id, title, cover, description, link, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		newID, categoryID, req.Title, req.Cover, req.Description, req.Link, req.Status, now, now,
 	)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create resource"})
