@@ -56,17 +56,13 @@ echo "配置Go模块代理..."
 export GOPROXY=https://goproxy.cn,direct
 export GO111MODULE=on
 
-# 判断是否需要编译后端
-if [ ! -f "$BACKEND_DIR/app" ]; then
-    echo "[3/8] 编译后端..."
-    cd "$BACKEND_DIR"
-    go mod tidy
-    go mod download
-    CGO_ENABLED=0 go build -o app .
-    echo "后端编译完成"
-else
-    echo "[3/8] 后端已编译，跳过"
-fi
+# 每次部署都重新编译后端，确保代码更新生效
+echo "[3/8] 编译后端..."
+cd "$BACKEND_DIR"
+go mod tidy
+go mod download
+go build -o app .
+echo "后端编译完成"
 
 # 构建前端
 echo "[4/8] 构建前端..."
